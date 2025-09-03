@@ -1,11 +1,12 @@
-import { db } from "../config/firebase.js";
+import { COLLECTION_PROFILE, COLLECTION_USER, db } from "../config/firebase.js";
+
 
 // Crear perfil
 export const addProfile = async (userName, profileData) => {
   const profileRef = db
-    .collection("User")
+    .collection(COLLECTION_USER)
     .doc(userName)
-    .collection("Profile-Tickets")
+    .collection(COLLECTION_PROFILE)
     .doc(profileData.name);
     
   await profileRef.set({
@@ -17,9 +18,9 @@ export const addProfile = async (userName, profileData) => {
 // Obtener todos los perfiles
 export const fetchAllProfiles = async (userName) => {
   const snapshot = await db
-    .collection("User")
+    .collection(COLLECTION_USER)
     .doc(userName)
-    .collection("Profile-Tickets")
+    .collection(COLLECTION_PROFILE)
     .get();
 
   return snapshot.docs.map(doc => doc.data());
@@ -28,9 +29,9 @@ export const fetchAllProfiles = async (userName) => {
 // Obtener un perfil por ID
 export const fetchProfileById = async (userName, profileName) => {
   const docRef = await db
-    .collection("User")
+    .collection(COLLECTION_USER)
     .doc(userName)
-    .collection("Profile-Tickets")
+    .collection(COLLECTION_PROFILE)
     .doc(profileName)
     .get();
 
@@ -40,9 +41,9 @@ export const fetchProfileById = async (userName, profileName) => {
 // Actualizar perfil
 export const editProfile = async (userName, profileName, updateData) => {
   const profileRef = db
-    .collection("User")
+    .collection(COLLECTION_USER)
     .doc(userName)
-    .collection("Profile-Tickets")
+    .collection(COLLECTION_PROFILE)
     .doc(profileName);
 
   await profileRef.update(updateData);
@@ -51,9 +52,9 @@ export const editProfile = async (userName, profileName, updateData) => {
 // Eliminar perfil
 export const removeProfile = async (userName, profileName) => {
   await db
-    .collection("User")
+    .collection(COLLECTION_USER)
     .doc(userName)
-    .collection("Profile-Tickets")
+    .collection(COLLECTION_PROFILE)
     .doc(profileName)
     .delete();
 };

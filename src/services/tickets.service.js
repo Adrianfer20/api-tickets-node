@@ -1,6 +1,8 @@
 // src/services/tickets.service.js
-import { db } from "../config/firebase.js"; // debe exportar admin.firestore() como "db"
+import { COLLECTION_PROFILE, COLLECTION_TICKETS, COLLECTION_USER, db } from "../config/firebase.js"; // debe exportar admin.firestore() como "db"
 import admin from "firebase-admin";
+
+
 
 /**
  * Generador de código: 6 chars [a-z0-9]
@@ -18,11 +20,11 @@ const generateRandomCode = () => {
  */
 const getExistingCodesSet = async (userName, profileName) => {
   const ticketsSnap = await db
-    .collection("User")
+    .collection(COLLECTION_USER)
     .doc(userName)
-    .collection("Profile-Tickets")
+    .collection(COLLECTION_PROFILE)
     .doc(profileName)
-    .collection("tickets")
+    .collection(COLLECTION_TICKETS)
     .get();
 
   const set = new Set();
@@ -61,7 +63,7 @@ const generateUniqueCodesForProfile = async (userName, profileName, amount) => {
  */
 export const createTicket = async (userName, profileName, quantity) => {
   // validar existencia del perfil (opcional pero recomendable)
-  const profileRef = db.collection("User").doc(userName).collection("Profile-Tickets").doc(profileName);
+  const profileRef = db.collection(COLLECTION_USER).doc(userName).collection(COLLECTION_PROFILE).doc(profileName);
   const profileSnap = await profileRef.get();
   if (!profileSnap.exists) throw new Error("Profile-Tickets no encontrado");
 
@@ -73,11 +75,11 @@ export const createTicket = async (userName, profileName, quantity) => {
   };
 
   const newRef = await db
-    .collection("User")
+    .collection(COLLECTION_USER)
     .doc(userName)
-    .collection("Profile-Tickets")
+    .collection(COLLECTION_PROFILE)
     .doc(profileName)
-    .collection("tickets")
+    .collection(COLLECTION_TICKETS)
     .add(ticketObj);
 
   return { id: newRef.id, ...ticketObj };
@@ -88,11 +90,11 @@ export const createTicket = async (userName, profileName, quantity) => {
  */
 export const getTickets = async (userName, profileName) => {
   const snap = await db
-    .collection("User")
+    .collection(COLLECTION_USER)
     .doc(userName)
-    .collection("Profile-Tickets")
+    .collection(COLLECTION_PROFILE)
     .doc(profileName)
-    .collection("tickets")
+    .collection(COLLECTION_TICKETS)
     .get();
 
   return snap.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -103,11 +105,11 @@ export const getTickets = async (userName, profileName) => {
  */
 export const getTicketById = async (userName, profileName, ticketId) => {
   const ref = db
-    .collection("User")
+    .collection(COLLECTION_USER)
     .doc(userName)
-    .collection("Profile-Tickets")
+    .collection(COLLECTION_PROFILE)
     .doc(profileName)
-    .collection("tickets")
+    .collection(COLLECTION_TICKETS)
     .doc(ticketId);
 
   const snap = await ref.get();
@@ -123,11 +125,11 @@ export const getTicketById = async (userName, profileName, ticketId) => {
  */
 export const updateTicketCodeByTicket = async (userName, profileName, ticketId, codeValue, updateFields) => {
   const ticketRef = db
-    .collection("User")
+    .collection(COLLECTION_USER)
     .doc(userName)
-    .collection("Profile-Tickets")
+    .collection(COLLECTION_PROFILE)
     .doc(profileName)
-    .collection("tickets")
+    .collection(COLLECTION_TICKETS)
     .doc(ticketId);
 
   const ticketSnap = await ticketRef.get();
@@ -169,11 +171,11 @@ export const updateTicketCodeByTicket = async (userName, profileName, ticketId, 
  */
 export const updateTicketCodeByValue = async (userName, profileName, codeValue, updateFields) => {
   const ticketsRef = db
-    .collection("User")
+    .collection(COLLECTION_USER)
     .doc(userName)
-    .collection("Profile-Tickets")
+    .collection(COLLECTION_PROFILE)
     .doc(profileName)
-    .collection("tickets");
+    .collection(COLLECTION_TICKETS);
 
   // obtenemos todos los tickets y buscamos el que tenga el code
   const snap = await ticketsRef.get();
@@ -196,11 +198,11 @@ export const updateTicketCodeByValue = async (userName, profileName, codeValue, 
  */
 export const deleteTicket = async (userName, profileName, ticketId) => {
   const ref = db
-    .collection("User")
+    .collection(COLLECTION_USER)
     .doc(userName)
-    .collection("Profile-Tickets")
+    .collection(COLLECTION_PROFILE)
     .doc(profileName)
-    .collection("tickets")
+    .collection(COLLECTION_TICKETS)
     .doc(ticketId);
 
   await ref.delete();

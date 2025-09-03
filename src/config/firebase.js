@@ -11,4 +11,10 @@ admin.initializeApp({
   })
 });
 
+export const auth = admin.auth();
 export const db = admin.firestore();
+
+
+export const COLLECTION_USER = "Users"
+export const COLLECTION_PROFILE = "Profile-Tickets";
+export const COLLECTION_TICKETS = "Tickets"
